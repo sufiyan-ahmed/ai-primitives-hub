@@ -170,3 +170,4 @@ post-compile-fixes-cross-platform.js
 .claude/settings.local.json
 # MkDocs build output
 site/
+_site/

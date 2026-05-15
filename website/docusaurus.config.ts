@@ -8,7 +8,7 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   url: "https://amadeustitgroup.github.io",
-  baseUrl: "/prompt-registry/",
+  baseUrl: "/prompt-registry/docusaurus/",
 
   organizationName: "AmadeusITGroup",
   projectName: "prompt-registry",

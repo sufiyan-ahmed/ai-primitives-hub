@@ -1,6 +1,6 @@
 site_name: Prompt Registry
 site_description: Marketplace and registry for Copilot prompt bundles in VS Code
-site_url: https://amadeustitgroup.github.io/prompt-registry/
+site_url: https://amadeustitgroup.github.io/prompt-registry/mkdocs/
 repo_url: https://github.com/AmadeusITGroup/prompt-registry
 repo_name: GitHub
 
@@ -42,6 +42,7 @@ exclude_docs: |
   CLAUDE.md
   README.md
   _hooks/
+  _landing/
 
 hooks:
   - docs/_hooks/readme_hook.py
