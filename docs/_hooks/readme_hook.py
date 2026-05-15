@@ -7,7 +7,7 @@ IDE-friendly (relative) while producing correct URLs on the built site.
 
 import os
 import re
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 REPO_URL = "https://github.com/AmadeusITGroup/prompt-registry/blob/main"
 
@@ -23,13 +23,8 @@ def on_page_read_source(page, config):
     # Fix image/link paths: ./docs/X  →  X  (now relative to docs/)
     content = content.replace("](./docs/", "](")
 
-    # Remove the "Full Documentation Index" link (nav tabs replace it)
-    content = content.replace(
-        "\u2192 [Full Documentation Index](README.md)\n", ""
-    )
-
-    # Root-relative ./X links must escape docs/ so on_page_markdown
-    # can detect and convert them to absolute GitHub URLs.
+    # Root-relative links: both ./X and bare X (without ./ prefix) must
+    # escape docs/ so on_page_markdown can detect and convert them.
     content = content.replace("](./", "](../")
 
     return content
@@ -61,9 +56,9 @@ def on_page_markdown(markdown, page, config, files):
         # Links inside docs/ — check if target is an excluded file
         try:
             rel_to_docs = resolved.relative_to(docs_dir)
-            if str(rel_to_docs) in excluded_files:
+            if str(PurePosixPath(rel_to_docs)) in excluded_files:
                 # Compute relative path from the current page to docs/index.md
-                rel_index = Path(os.path.relpath(
+                rel_index = PurePosixPath(os.path.relpath(
                     docs_dir / "index.md", page_dir
                 ))
                 suffix = f"#{anchor}" if anchor else ""
@@ -74,7 +69,7 @@ def on_page_markdown(markdown, page, config, files):
 
         # Outside docs/ — rewrite to absolute GitHub URL
         try:
-            rel = resolved.relative_to(repo_root)
+            rel = PurePosixPath(resolved.relative_to(repo_root))
             suffix = f"#{anchor}" if anchor else ""
             return f"[{text}]({REPO_URL}/{rel}{suffix})"
         except ValueError:
